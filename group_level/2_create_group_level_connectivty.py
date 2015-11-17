@@ -15,7 +15,8 @@ thr = 90
 for hemi in ['lh', 'rh']:
     
     cort = np.sort(nib.freesurfer.io.read_label('%s/fsaverage5/label/%s.cortex.label' % (fsDir, hemi)))
-    group_sum = np.zeros((10242,10242))
+    group_sum = np.zeros((10242,10242))    
+    group_sum_cort = np.zeros((len(cort), len(cort)))
     
     for sub in subjects:
         
@@ -30,8 +31,9 @@ for hemi in ['lh', 'rh']:
         # take top 10% per node, binarize, and add to group matrix
         for n_node, node in enumerate(cort):
             cutoff = np.percentile(individ_mat_concat[n_node], thr)
-            group_sum[node][individ_mat_concat[n_node] > cutoff] += 1 
+            group_sum_cort[n_node][individ_mat_concat[n_node] > cutoff] += 1 
         
+    group_sum[np.ix_(cort, cort)] = group_sum_cort
     group_avg = group_sum / len(subjects)
     scipy.io.savemat('/scr/liberia1/data/lsd/corr/corrmat_group_%s.mat' 
                      % hemi, mdict={'corrmat_group_%s' % hemi: group_avg})
