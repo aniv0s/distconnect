@@ -17,15 +17,15 @@ def euclDist(subject):
         cort = fs.read_label('%s/fsaverage5/label/%s.cortex.label' % (fsDir, hemi))
      
         # get corresponding nodes on subject sphere (find coords of high-dim subject surface closest to fsa5 nodes in sphere space)
-        subj_sphere_coords = fs.read_geometry('%s/00796/surf/%s.sphere' % (fsDir, hemi))[0]
+        subj_sphere_coords = fs.read_geometry('%s/%s/surf/%s.sphere' % (fsDir, subject, hemi))[0]
         subj_indices = []
         for node in cort:
             dist2all = np.squeeze(distance_matrix(np.expand_dims(fsa5_sphere_coords[node], axis=0), subj_sphere_coords))
             subj_indices.append(list(dist2all).index(min(dist2all)))
         
         # pair-wise euclidean distance between included nodes on subject surface (midline)
-        subj_surf_coords_pial = fs.read_geometry('%s/00796/surf/%s.pial' % (fsDir, hemi))[0]
-        subj_surf_coords_wm = fs.read_geometry('%s/00796/surf/%s.smoothwm' % (fsDir, hemi))[0]
+        subj_surf_coords_pial = fs.read_geometry('%s/%s/surf/%s.pial' % (fsDir, subject, hemi))[0]
+        subj_surf_coords_wm = fs.read_geometry('%s/%s/surf/%s.smoothwm' % (fsDir, subject, hemi))[0]
         subj_surf_coords = (subj_surf_coords_pial + subj_surf_coords_wm) / 2.
         
         euclDist = np.zeros((10242,10242))
