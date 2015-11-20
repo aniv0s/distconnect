@@ -42,14 +42,11 @@ for hemi in ['lh', 'rh']:
                     nodes_with_least_bad_neighbors = bad[0][bad[1] == np.min(bad[1])]
                     for node in nodes_with_least_bad_neighbors:
                         surf_data[node] = np.mean(surf_data[list(good[node])], axis=0)
-                    surf_img._data = np.expand_dims(np.expand_dims(surf_data, axis=1), axis=1)
 
                 brain = Brain('fsaverage5', hemi, 'pial', curv=False)
                 brain.add_data(mask, mask.min(), mask.max(), colormap="spectral", alpha=0.6)
                 brain.save_montage(mask_img_f, order=['lat', 'med'], orientation='h', border_size=10)
                 np.save(mask_f, mask)
 
-            else:
-                surf_img._data = surf_data
 
             surf_img.to_filename(rest_interp_f)

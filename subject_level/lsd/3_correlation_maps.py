@@ -16,7 +16,7 @@ for hemi in ['lh', 'rh']:
         corr_f = rest_f.replace('resting',
                                 'correlation_maps').replace('_rest_',
                                                             '_corr_').replace('.mgz', '')
-        if not os.path.isfile(corr_f):
+        if not os.path.isfile(corr_f + '.npy'):
             print os.path.basename(corr_f)
             data = nib.load(rest_f).get_data().squeeze()
             corr_cort = np.corrcoef(data[cort])

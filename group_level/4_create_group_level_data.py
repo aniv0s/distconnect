@@ -5,6 +5,7 @@ import pandas as pd
 import glob, os, datetime
 import nibabel as nib
 import numpy as np
+import scipy
 from nipype.algorithms.icc import ICC_rep_anova
 from sklearn import mixture
 from sklearn.metrics.cluster import homogeneity_score
@@ -49,6 +50,13 @@ def run_stdev_meanDist(subjects, dataDir, thr, hemi):
         concat[n_sub] = np.load('%s/%s/meanDist/%s_lsd_meanDist_interp_%s_1ab2ab_fsa5_%s.npy' 
                                 % (dataDir, sub, sub, thr, hemi))
     return concat.std(axis=0)
+    
+def run_coefvariation_meanDist(subjects, dataDir, thr, hemi):
+    concat = np.zeros((len(subjects), 10242))
+    for n_sub, sub in enumerate(subjects):
+        concat[n_sub] = np.load('%s/%s/meanDist/%s_lsd_meanDist_interp_%s_1ab2ab_fsa5_%s.npy' 
+                                % (dataDir, sub, sub, thr, hemi))
+    return scipy.stats.variation(concat, axis=0)
 
 def run_icc_meanDist(subjects, dataDir, fsDir, thr, hemi, scan_list):
     concat = np.zeros((len(subjects), len(scan_list), 10242))
@@ -94,6 +102,7 @@ df = pd.DataFrame(columns=['sample', 'threshold', 'hemisphere', 'node',
                            'mean distance - group mean',
                            'normalized mean distance - group mean',
                            'mean distance - standard deviation across subjects',
+                           'mean distance - coefficient of variation across subjects',
                            'trt4_icc', 'trt4_rvar', 'trt4_evar', 'trt4_ses_eff_F', 'trt4_dfc', 'trt4_dfe',
                            'trt2_icc', 'trt2_rvar', 'trt2_evar', 'trt2_ses_eff_F', 'trt2_dfc', 'trt2_dfe',
                            'gmm_comp4', 'gmm_comp5', 'gmm_comp6', 'gmm_comp7', 'gmm_comp8', 'gmm_comp9',
@@ -116,6 +125,7 @@ for sample in samples.keys():
             print thr
             meanDist = run_grmean_meanDist(samples[sample], dataDir, thr, hemi)
             stdev = run_stdev_meanDist(samples[sample], dataDir, thr, hemi)
+            coefvar = run_coefvariation_meanDist(samples[sample], dataDir, thr, hemi)
             meanDist_norm = np.zeros((10242))
             meanDist_norm[cort] = (meanDist[np.nonzero(meanDist)] - meanDist[np.nonzero(meanDist)].mean()) / meanDist[np.nonzero(meanDist)].std()
             trt_4 = run_icc_meanDist(samples[sample], dataDir, fsDir, thr, hemi, ['1a', '1b', '2a', '2b'])
@@ -145,6 +155,7 @@ for sample in samples.keys():
                                    yeo17[2][yeo17[0][node]],
                                    meanDist[node], meanDist_norm[node],
                                    stdev[node],
+                                   coefvar[node], 
                                    trt_4[0, node], trt_4[1, node], trt_4[2, node], trt_4[3, node], trt_4[4, node], trt_4[5, node],
                                    trt_2[0, node], trt_2[1, node], trt_2[2, node], trt_2[3, node], trt_2[4, node], trt_2[5, node],
                                    data_gmm[num_comps[0]][node], data_gmm[num_comps[1]][node], data_gmm[num_comps[2]][node],

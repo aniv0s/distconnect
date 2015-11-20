@@ -10,7 +10,7 @@ freesurferDir = "/afs/cbs.mpg.de/projects/mar004_lsd-lemon-preproc/freesurfer"
 workingDir = "/scr/liberia1/data/lsd/surface/rest2surf/vol2surf_workingDir"
 sinkDir = "/scr/liberia1/data/lsd/surface/rest2surf"
 
-subjects = ['26693', '27773', '27895', '28036', '28098']
+subjects = ['26693', '27773', '27895', '28036']
 
 
 '''workflow'''
@@ -33,8 +33,6 @@ if __name__ == '__main__':
                        name="selectfiles")
     
     
-
-
     vol2surf = pe.Node(SampleToSurface(subjects_dir=freesurferDir,
                                        target_subject='fsaverage5',
                                        args='--surfreg sphere.reg',
