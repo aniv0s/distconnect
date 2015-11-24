@@ -267,33 +267,63 @@ for hemi in ['lh', 'rh']:
             df['eucl_distance_%s' %hemi].iloc[idx] = 0
 
 
-############################ meanDist #########################################
+############################ geo meanDist #####################################
 
 # lsd
 for hemi in ['lh', 'rh']:
     for scan in ['1a', '1b', '2a', '2b', '1ab', '2ab', '1ab2ab']:
         for thr in [70, 75, 80, 85, 90, 95, 98]:
-                df['lsd_meanDist_%s_%s_%s' % (scan, thr, hemi)] = np.nan
+                df['lsd_meanDist_geo_%s_%s_%s' % (scan, thr, hemi)] = np.nan
                 for idx in df.index:
                     subject = df['subject'].iloc[idx]
-                    f = '%s/%s/meanDist/%s_lsd_meanDist_interp_%s_%s_fsa5_%s.npy' % (surfDir, subject, subject, thr, scan, hemi)
+                    f = '%s/%s/meanDist/%s_lsd_meanDist_geo_interp_%s_%s_fsa5_%s.npy' % (surfDir, subject, subject, thr, scan, hemi)
                     if os.path.isfile(f):
-                        df['lsd_meanDist_%s_%s_%s' % (scan, thr, hemi)].iloc[idx] = 1
+                        df['lsd_meanDist_geo_%s_%s_%s' % (scan, thr, hemi)].iloc[idx] = 1
                     else:
-                        df['lsd_meanDist_%s_%s_%s' % (scan, thr, hemi)].iloc[idx] = 0
+                        df['lsd_meanDist_geo_%s_%s_%s' % (scan, thr, hemi)].iloc[idx] = 0
 
 # lemon                        
 for hemi in ['lh', 'rh']:
         for thr in [70, 75, 80, 85, 90, 95, 98]:
-                df['lemon_meanDist_%s_%s' % (thr, hemi)] = np.nan
+                df['lemon_meanDist_geo_%s_%s' % (thr, hemi)] = np.nan
                 for idx in df.index:
                     subject = df['subject'].iloc[idx]
-                    f = '%s/%s/meanDist/%s_lemon_meanDist_interp_%s_fsa5_%s.npy' % (surfDir, subject, subject, thr, hemi)
+                    f = '%s/%s/meanDist/%s_lemon_meanDist_geo_interp_%s_fsa5_%s.npy' % (surfDir, subject, subject, thr, hemi)
                     if os.path.isfile(f):
-                        df['lemon_meanDist_%s_%s' % (thr, hemi)].iloc[idx] = 1
+                        df['lemon_meanDist_geo_%s_%s' % (thr, hemi)].iloc[idx] = 1
                     else:
-                        df['lemon_meanDist_%s_%s' % (thr, hemi)].iloc[idx] = 0
+                        df['lemon_meanDist_geo_%s_%s' % (thr, hemi)].iloc[idx] = 0
 
+
+############################ eucl meanDist ####################################
+
+# lsd
+for hemi in ['lh', 'rh']:
+    for scan in ['1a', '1b', '2a', '2b', '1ab', '2ab', '1ab2ab']:
+        for thr in [70, 75, 80, 85, 90, 95, 98]:
+                df['lsd_meanDist_eucl_%s_%s_%s' % (scan, thr, hemi)] = np.nan
+                for idx in df.index:
+                    subject = df['subject'].iloc[idx]
+                    f = '%s/%s/meanDist/%s_lsd_meanDist_eucl_interp_%s_%s_fsa5_%s.npy' % (surfDir, subject, subject, thr, scan, hemi)
+                    if os.path.isfile(f):
+                        df['lsd_meanDist_eucl_%s_%s_%s' % (scan, thr, hemi)].iloc[idx] = 1
+                    else:
+                        df['lsd_meanDist_eucl_%s_%s_%s' % (scan, thr, hemi)].iloc[idx] = 0
+
+# lemon                        
+for hemi in ['lh', 'rh']:
+        for thr in [70, 75, 80, 85, 90, 95, 98]:
+                df['lemon_meanDist_eucl_%s_%s' % (thr, hemi)] = np.nan
+                for idx in df.index:
+                    subject = df['subject'].iloc[idx]
+                    f = '%s/%s/meanDist/%s_lemon_meanDist_eucl_interp_%s_fsa5_%s.npy' % (surfDir, subject, subject, thr, hemi)
+                    if os.path.isfile(f):
+                        df['lemon_meanDist_eucl_%s_%s' % (thr, hemi)].iloc[idx] = 1
+                    else:
+                        df['lemon_meanDist_eucl_%s_%s' % (thr, hemi)].iloc[idx] = 0
+
+
+###############################################################################
 # save
 df.to_pickle(overview)
 del df
